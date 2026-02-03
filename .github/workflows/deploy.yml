@@ -9,9 +9,9 @@ env:
 jobs:
   test:
     env:
-      MONGODB_CLUSTER_ADDRESS: cluster0.xyz.mongodb.net # bad practice, use secrets
-      MONGODB_USERNAME: ivan  # bad practice, use secrets
-      MONGODB_PASSWORD: superuser # bad practice, use secrets
+      MONGODB_CLUSTER_ADDRESS: cluster0.xyz.mongodb.net 
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }} # use secrets for sensitive data
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }} # use secrets for sensitive data
       PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
