@@ -4,8 +4,15 @@ on:
     branches:
       - main
       - dev
+env:
+  MONGODB_DB_NAME: gha-demo
 jobs:
   test:
+    env:
+      MONGODB_CLUSTER_ADDRESS: cluster0.xyz.mongodb.net # bad practice, use secrets
+      MONGODB_USERNAME: ivan  # bad practice, use secrets
+      MONGODB_PASSWORD: superuser # bad practice, use secrets
+      PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
     steps:
@@ -19,15 +26,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:XYZ
+        run: npm start & npx wait-on http://127.0.0.1:$PORT
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: |
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "..."
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}" # not awailable here because it's defined in 'test' job only
+          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}" # available here because it's defined in 'env' section at the top level
